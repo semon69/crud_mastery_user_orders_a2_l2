@@ -111,11 +111,34 @@ const updateOrderData = async (req: Request, res: Response) => {
     }
 }
 
+const getAllOrderFromAUser = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params
+        const idNumber = parseFloat(userId)
+        const result = await usersService.getAllOrdersForSingleUserFromDb(idNumber)
+        res.status(200).json({
+            success: true,
+            message: 'Order data updated successfully!',
+            data: result
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            error: {
+                code: 500,
+                description: error.message || 'Something went wrong',
+            }
+        });
+    }
+}
+
 export const usersController = {
     createUser,
     getUsers,
     getSingleUser,
     updateSingleUser,
-    updateOrderData
+    updateOrderData,
+    getAllOrderFromAUser
 
 }

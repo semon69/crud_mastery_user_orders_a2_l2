@@ -57,6 +57,19 @@ const updateOrderDataFromDb = async (userId: number, order: TOrder) => {
     }
 }
 
+const getAllOrdersForSingleUserFromDb = async (userId: number) => {
+    // const result = await Users.findOne({ userId: userId })
+    const result = await Users.aggregate([
+        {
+            $match: { userId: userId }
+        },
+        {
+            $project: { _id: 0, orders: 1 }
+        }
+    ])
+    return result
+}
+
 
 
 
@@ -65,6 +78,7 @@ export const usersService = {
     getAllUsersFromDb,
     getSingleUserFromDb,
     updateUsersDataFromDb,
-    updateOrderDataFromDb
+    updateOrderDataFromDb,
+    getAllOrdersForSingleUserFromDb
 
 }
