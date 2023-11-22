@@ -7,6 +7,7 @@ router.post('/POST/api/users', usersController.createUser)
 router.get('/GET/api/users', usersController.getUsers)
 router.get('/GET/api/users/:userId', usersController.getSingleUser)
 router.put('/PUT/api/users/:userId', usersController.updateSingleUser)
+router.put('/PUT/api/users/:userId/orders', usersController.updateOrderData)
 
 
 export const UserRoutes = router

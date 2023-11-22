@@ -1,7 +1,10 @@
 import { Users } from "../users.model"
-import { TUsers } from "./users.interface"
+import { TOrder, TUsers } from "./users.interface"
 
 const createUsersIntoDb = async (users: TUsers) => {
+    if (await Users.isUserExists(users.userId)) {
+        throw new Error('User already exists')
+    }
     const result = await Users.create(users)
     return result
 }
@@ -35,12 +38,33 @@ const updateUsersDataFromDb = async (userId: number, user: TUsers) => {
     )
     return result
 }
+const updateOrderDataFromDb = async (userId: number, order: TOrder) => {
+    const user = await Users.findOne({ userId: userId })
+    // if (await Users.isUserExists(userId)) {
+    //     // throw new Error('User already exists')
+
+    // }
+    if (user?.orders && Array.isArray(user.orders)) {
+        await Users.updateOne(
+            { userId },
+            { $push: { orders: order } }
+        );
+    } else {
+        await Users.updateOne(
+            { userId },
+            { $set: { orders: [order] } }
+        );
+    }
+}
+
+
 
 
 export const usersService = {
     createUsersIntoDb,
     getAllUsersFromDb,
     getSingleUserFromDb,
-    updateUsersDataFromDb
+    updateUsersDataFromDb,
+    updateOrderDataFromDb
 
 }
