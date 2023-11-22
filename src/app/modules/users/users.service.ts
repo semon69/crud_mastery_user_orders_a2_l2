@@ -70,8 +70,16 @@ const getAllOrdersForSingleUserFromDb = async (userId: number) => {
     return result
 }
 
+const getTotalPriceForAOrdersFromDb = async (userId: number) => {
 
-
+    const user = await Users.findOne({ userId: userId })
+    let totalCost = 0
+    user?.orders?.forEach((order) => {
+        const singleProductPrice = order?.price * order?.quantity
+        totalCost += singleProductPrice
+    })
+    return totalCost
+}
 
 export const usersService = {
     createUsersIntoDb,
@@ -79,6 +87,7 @@ export const usersService = {
     getSingleUserFromDb,
     updateUsersDataFromDb,
     updateOrderDataFromDb,
-    getAllOrdersForSingleUserFromDb
+    getAllOrdersForSingleUserFromDb,
+    getTotalPriceForAOrdersFromDb
 
 }
