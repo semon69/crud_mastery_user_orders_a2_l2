@@ -23,11 +23,17 @@ const getSingleUserFromDb = async (userId: number) => {
             $match: { userId: userId }
         },
         {
-            $project: { _id: 0, userName: 1, fullName: 1, age: 1, email: 1, address: 1, orders: 0 }
+            $project: { _id: 0, userName: 1, fullName: 1, age: 1, email: 1 }
         }
     ])
     return result
 }
+
+const deleteSingleUserFromDb = async (userId: string) => {
+    const result = await Users.updateOne({ userId: userId }, { isDeleted: true })
+    return result
+}
+
 
 const updateUsersDataFromDb = async (userId: number, user: TUsers) => {
     const result = await Users.updateOne(
@@ -85,6 +91,7 @@ export const usersService = {
     createUsersIntoDb,
     getAllUsersFromDb,
     getSingleUserFromDb,
+    deleteSingleUserFromDb,
     updateUsersDataFromDb,
     updateOrderDataFromDb,
     getAllOrdersForSingleUserFromDb,

@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
 import { TAddress, TFullName, TOrder, TUsers, UserModel } from "./users/users.interface";
+import config from "../config";
+import bcrypt from "bcrypt"
 
 
 const FullNameSchema = new Schema<TFullName>({
@@ -86,7 +88,36 @@ const UserSchema = new Schema<TUsers, UserModel>({
         type: [OrderSchema],
         required: false
     },
+    isDeleted: {
+        type: Boolean,
+    }
 });
+
+// Pre save middleware / hooks
+UserSchema.pre("save", async function (next) {
+    this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt_rounds))
+    next()
+})
+
+// Post save middleware/hooks
+UserSchema.post('save', async function (doc, next) {
+    doc.password = " "
+    next()
+})
+
+// Query middleware
+UserSchema.pre('find', async function (next) {
+    this.find({ isDeleted: { $ne: true } })
+    next()
+})
+UserSchema.pre('findOne', async function (next) {
+    this.find({ isDeleted: { $ne: true } })
+    next()
+})
+UserSchema.pre('aggregate', async function (next) {
+    this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
+    next()
+})
 
 UserSchema.statics.isUserExists = async function (userId: number) {
     const existingUser = await Users.findOne({ userId })

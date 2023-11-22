@@ -28,6 +28,7 @@ const UserSchemaZod = z.object({
     hobbies: z.array(z.string().min(1)),
     address: AddressSchemaZod,
     orders: z.array(OrderSchemaZod).optional(),
+    isDeleted: z.boolean().optional(),
 });
 
 export default UserSchemaZod

@@ -64,6 +64,23 @@ const getSingleUser = async (req: Request, res: Response) => {
         });
     }
 }
+const deleteSingleUser = async (req: Request, res: Response) => {
+    try {
+        const userId = req.params.userId
+        const result = await usersService.deleteSingleUserFromDb(userId)
+        res.status(200).json({
+            success: true,
+            message: 'Delete User data successfully',
+            data: result,
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            error: error,
+        });
+    }
+}
 const updateSingleUser = async (req: Request, res: Response) => {
     try {
         const user = req.body
@@ -96,7 +113,7 @@ const updateOrderData = async (req: Request, res: Response) => {
 
         res.status(200).json({
             success: true,
-            message: 'Order data updated successfully!',
+            message: 'Orders data updated successfully!',
             data: null,
         });
     } catch (error: any) {
@@ -158,6 +175,7 @@ export const usersController = {
     createUser,
     getUsers,
     getSingleUser,
+    deleteSingleUser,
     updateSingleUser,
     updateOrderData,
     getAllOrderFromAUser,
