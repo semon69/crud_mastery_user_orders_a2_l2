@@ -23,7 +23,7 @@ const getSingleUserFromDb = async (userId: number) => {
             $match: { userId: userId }
         },
         {
-            $project: { _id: 0, userName: 1, fullName: 1, age: 1, email: 1 }
+            $project: { _id: 0, userName: 1, fullName: 1, age: 1, email: 1, address: 1, orders: 0 }
         }
     ])
     return result
