@@ -14,9 +14,33 @@ const getAllUsersFromDb = async () => {
     return result
 }
 
+const getSingleUserFromDb = async (userId: number) => {
+    const result = await Users.aggregate([
+        {
+            $match: { userId: userId }
+        },
+        {
+            $project: { _id: 0, userName: 1, fullName: 1, age: 1, email: 1, address: 1, orders: 0 }
+        }
+    ])
+    return result
+}
+
+const updateUsersDataFromDb = async (userId: number, user: TUsers) => {
+    const result = await Users.updateOne(
+        { userId: userId },
+        {
+            $set: user
+        }
+    )
+    return result
+}
+
 
 export const usersService = {
     createUsersIntoDb,
     getAllUsersFromDb,
+    getSingleUserFromDb,
+    updateUsersDataFromDb
 
 }
