@@ -1,5 +1,8 @@
+
+import config from "../../config"
 import { Users } from "../users.model"
 import { TOrder, TUsers } from "./users.interface"
+import bcrypt from "bcrypt"
 
 const createUsersIntoDb = async (users: TUsers, userId: number) => {
     if (await Users.isUserExists(users.userId)) {
@@ -45,6 +48,7 @@ const getSingleUserFromDb = async (userId: number) => {
 
 const updateUsersDataFromDb = async (userId: number, user: TUsers) => {
     if (await Users.isUserExists(userId)) {
+        user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt_rounds))
         await Users.updateOne(
             { userId: userId },
             {
