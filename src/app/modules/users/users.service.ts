@@ -6,15 +6,15 @@ const createUsersIntoDb = async (users: TUsers, userId: number) => {
         throw new Error('User already exists')
     }
     await Users.create(users)
-    const resultWithOutPass = await Users.aggregate([
+    const result = await Users.aggregate([
         {
             $match: { userId: userId }
         },
         {
-            $project: { _id: 0, userName: 1, fullName: 1, age: 1, email: 1, address: 1 }
+            $project: { _id: 0, userId: 1, userName: 1, fullName: 1, age: 1, email: 1, address: 1 }
         }
     ])
-    return resultWithOutPass
+    return result[0]
 }
 const getAllUsersFromDb = async () => {
     const result = await Users.aggregate([
