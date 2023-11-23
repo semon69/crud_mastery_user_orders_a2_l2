@@ -53,7 +53,7 @@ const updateUsersDataFromDb = async (userId: number, user: TUsers) => {
         )
         const result = await Users.aggregate([
             {
-                $match: { userId: userId }
+                $match: { userId: user?.userId }
             },
             {
                 $project: { _id: 0, userId: 1, userName: 1, fullName: 1, age: 1, isActive: 1, email: 1, hobbies: 1, address: 1 }

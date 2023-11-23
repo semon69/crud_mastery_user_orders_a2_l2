@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { usersService } from "./users.service";
-import UserSchemaZod from "./user.validation.zod";
+import UserSchemaZod, { OrderSchemaZod } from "./user.validation.zod";
 
 const createUser = async (req: Request, res: Response) => {
     try {
@@ -103,16 +103,20 @@ const deleteSingleUser = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             message: error.message || 'Something went wrong',
-            error: error,
+            error: {
+                code: 500,
+                description: error.message || 'Something went wrong',
+            }
         });
     }
 }
 const addOrderData = async (req: Request, res: Response) => {
     try {
         const order = req.body
+        const zodValidationData = OrderSchemaZod.parse(order)
         const { userId } = req.params
         const idNumber = parseFloat(userId)
-        await usersService.addOrderDataIntoDb(idNumber, order)
+        await usersService.addOrderDataIntoDb(idNumber, zodValidationData)
 
         res.status(200).json({
             success: true,

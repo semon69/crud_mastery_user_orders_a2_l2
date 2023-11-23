@@ -13,8 +13,8 @@ const AddressSchemaZod = z.object({
 
 const OrderSchemaZod = z.object({
     productName: z.string().min(1),
-    price: z.number().nonnegative(),
-    quantity: z.number().nonnegative(),
+    price: z.number().nonnegative().min(1),
+    quantity: z.number().nonnegative().min(1),
 });
 
 const UserSchemaZod = z.object({
@@ -30,4 +30,4 @@ const UserSchemaZod = z.object({
     orders: z.array(OrderSchemaZod).optional(),
 });
 
-export default UserSchemaZod
+export { UserSchemaZod, OrderSchemaZod }
