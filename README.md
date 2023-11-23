@@ -7,7 +7,7 @@ This API allows you to perform CRUD (Create, Read, Update, Delete) operations on
 ### 1. Create User
 
 - **Method:** POST
-- **Endpoint:** `https://crud-mastery-mongoose.vercel.app/api/users`
+- **Endpoint:** https://crud-mastery-mongoose.vercel.app/api/users
 
 ### 2. Get Users
 
