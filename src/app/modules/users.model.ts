@@ -87,9 +87,6 @@ const UserSchema = new Schema<TUsers, UserModel>({
     orders: {
         type: [OrderSchema],
         required: false
-    },
-    isDeleted: {
-        type: Boolean,
     }
 });
 
@@ -102,20 +99,6 @@ UserSchema.pre("save", async function (next) {
 // Post save middleware/hooks
 UserSchema.post('save', async function (doc, next) {
     doc.password = " "
-    next()
-})
-
-// Query middleware
-UserSchema.pre('find', async function (next) {
-    this.find({ isDeleted: { $ne: true } })
-    next()
-})
-UserSchema.pre('findOne', async function (next) {
-    this.find({ isDeleted: { $ne: true } })
-    next()
-})
-UserSchema.pre('aggregate', async function (next) {
-    this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
     next()
 })
 

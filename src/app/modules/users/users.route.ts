@@ -3,14 +3,14 @@ import { usersController } from './users.controller';
 
 const router = express.Router()
 
-router.post('/POST/api/users', usersController.createUser)
-router.get('/GET/api/users', usersController.getUsers)
-router.get('/GET/api/users/:userId', usersController.getSingleUser)
-router.put('/PUT/api/users/:userId', usersController.deleteSingleUser)
-router.put('/PUT/api/users/:userId', usersController.updateSingleUser)
-router.put('/PUT/api/users/:userId/orders', usersController.updateOrderData)
-router.get('/GET/api/users/:userId/orders', usersController.getAllOrderFromAUser)
-router.get('/GET/api/users/:userId/orders/total-price', usersController.getTotalPriceFromOrder)
+router.post('/', usersController.createUser)
+router.get('/', usersController.getUsers)
+router.get('/:userId', usersController.getSingleUser)
+router.delete('/:userId', usersController.deleteSingleUser)
+router.put('/:userId', usersController.updateSingleUser)
+router.put('/:userId/orders', usersController.addOrderData)
+router.get('/:userId/orders', usersController.getAllOrderFromAUser)
+router.get('/:userId/orders/total-price', usersController.getTotalPriceFromOrder)
 
 
 export const UserRoutes = router

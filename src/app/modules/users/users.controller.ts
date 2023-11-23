@@ -6,7 +6,7 @@ const createUser = async (req: Request, res: Response) => {
     try {
         const user = req.body
         const zodValidationData = UserSchemaZod.parse(user)
-        const result = await usersService.createUsersIntoDb(zodValidationData)
+        const result = await usersService.createUsersIntoDb(zodValidationData, zodValidationData?.userId)
         res.status(200).json({
             success: true,
             message: 'User created successfully',
@@ -51,42 +51,27 @@ const getSingleUser = async (req: Request, res: Response) => {
         res.status(200).json({
             success: true,
             message: 'A User data fetched successfully!',
-            data: result,
+            data: result
         });
     } catch (error: any) {
-        res.status(500).json({
+        res.status(404).json({
             success: false,
             message: error.message || 'Something went wrong',
             error: {
-                code: 500,
+                code: 404,
                 description: error.message || 'Something went wrong',
             }
         });
     }
 }
-const deleteSingleUser = async (req: Request, res: Response) => {
-    try {
-        const userId = req.params.userId
-        const result = await usersService.deleteSingleUserFromDb(userId)
-        res.status(200).json({
-            success: true,
-            message: 'Delete User data successfully',
-            data: result,
-        });
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message || 'Something went wrong',
-            error: error,
-        });
-    }
-}
+
 const updateSingleUser = async (req: Request, res: Response) => {
     try {
         const user = req.body
         const { userId } = req.params
         const idNumber = parseFloat(userId)
-        const result = await usersService.updateUsersDataFromDb(idNumber, user)
+        const zodValidationData = UserSchemaZod.parse(user)
+        const result = await usersService.updateUsersDataFromDb(idNumber, zodValidationData)
 
         res.status(200).json({
             success: true,
@@ -104,12 +89,30 @@ const updateSingleUser = async (req: Request, res: Response) => {
         });
     }
 }
-const updateOrderData = async (req: Request, res: Response) => {
+const deleteSingleUser = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params
+        const idNumber = parseFloat(userId)
+        const result = await usersService.deleteSingleUserFromDb(idNumber)
+        res.status(200).json({
+            success: true,
+            message: 'Delete User data successfully',
+            data: result,
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            error: error,
+        });
+    }
+}
+const addOrderData = async (req: Request, res: Response) => {
     try {
         const order = req.body
         const { userId } = req.params
         const idNumber = parseFloat(userId)
-        await usersService.updateOrderDataFromDb(idNumber, order)
+        await usersService.addOrderDataIntoDb(idNumber, order)
 
         res.status(200).json({
             success: true,
@@ -177,7 +180,7 @@ export const usersController = {
     getSingleUser,
     deleteSingleUser,
     updateSingleUser,
-    updateOrderData,
+    addOrderData,
     getAllOrderFromAUser,
     getTotalPriceFromOrder
 
