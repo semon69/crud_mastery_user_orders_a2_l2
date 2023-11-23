@@ -114,13 +114,29 @@ const getAllOrdersForSingleUserFromDb = async (userId: number) => {
 
 const getTotalPriceForAOrdersFromDb = async (userId: number) => {
     if (await Users.isUserExists(userId)) {
-        const user = await Users.findOne({ userId: userId })
-        let totalCost = 0
-        user?.orders?.forEach((order) => {
-            const singleProductPrice = order?.price * order?.quantity
-            totalCost += singleProductPrice
-        })
-        return totalCost
+        const result = await Users.aggregate([
+            {
+                $match: { userId: userId }
+            },
+            {
+                $unwind: "$orders"
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalPrice: {
+                        $sum: {
+                            $multiply: ["$orders.price", "$orders.quantity"]
+                        }
+                    }
+
+                }
+            },
+            {
+                $project: { _id: 0, totalPrice: 1 }
+            }
+        ])
+        return result[0]
     } else {
         throw new Error('User not found')
     }
