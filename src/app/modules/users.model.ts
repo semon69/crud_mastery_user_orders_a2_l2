@@ -4,6 +4,7 @@ import config from "../config";
 import bcrypt from "bcrypt"
 
 
+// Full name schema for type TFullName
 const FullNameSchema = new Schema<TFullName>({
     firstName: {
         type: String,
@@ -15,6 +16,7 @@ const FullNameSchema = new Schema<TFullName>({
     },
 });
 
+// Address schema for type TAddress
 const AddressSchema = new Schema<TAddress>({
     street: {
         type: String,
@@ -30,6 +32,7 @@ const AddressSchema = new Schema<TAddress>({
     },
 });
 
+// Order schema for type TOrder
 const OrderSchema = new Schema<TOrder>({
     productName: {
         type: String,
@@ -45,6 +48,7 @@ const OrderSchema = new Schema<TOrder>({
     },
 });
 
+// User schema for type TUsers and pass userModel to find user exist or not
 const UserSchema = new Schema<TUsers, UserModel>({
     userId: {
         type: Number,
@@ -90,7 +94,7 @@ const UserSchema = new Schema<TUsers, UserModel>({
     }
 });
 
-// Pre save middleware / hooks
+// Pre save middleware / hooks for hash password
 UserSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt_rounds))
     next()
@@ -102,6 +106,7 @@ UserSchema.post('save', async function (doc, next) {
     next()
 })
 
+// create static method to find is user exist or not
 UserSchema.statics.isUserExists = async function (userId: number) {
     const existingUser = await Users.findOne({ userId })
     return existingUser

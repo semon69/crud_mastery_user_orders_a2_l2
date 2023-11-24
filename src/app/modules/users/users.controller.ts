@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { usersService } from "./users.service";
 import { UserSchemaZod, OrderSchemaZod } from "./user.validation.zod";
 
+
+// create user function. Sent request to server for create user
 const createUser = async (req: Request, res: Response) => {
     try {
         const user = req.body
@@ -24,6 +26,7 @@ const createUser = async (req: Request, res: Response) => {
     }
 }
 
+// Function for get all users from database
 const getUsers = async (req: Request, res: Response) => {
     try {
         const result = await usersService.getAllUsersFromDb()
@@ -43,6 +46,8 @@ const getUsers = async (req: Request, res: Response) => {
         });
     }
 }
+
+// Function for get a user using a specific userId
 const getSingleUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params
@@ -65,6 +70,7 @@ const getSingleUser = async (req: Request, res: Response) => {
     }
 }
 
+// Function for update a user data using specific userId
 const updateSingleUser = async (req: Request, res: Response) => {
     try {
         const user = req.body
@@ -89,6 +95,8 @@ const updateSingleUser = async (req: Request, res: Response) => {
         });
     }
 }
+
+// Function for delete a user using specific userId
 const deleteSingleUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params
@@ -110,6 +118,8 @@ const deleteSingleUser = async (req: Request, res: Response) => {
         });
     }
 }
+
+// Function for update orders in user using a specific userId
 const addOrderData = async (req: Request, res: Response) => {
     try {
         const order = req.body
@@ -135,6 +145,7 @@ const addOrderData = async (req: Request, res: Response) => {
     }
 }
 
+// Function for get all order data for a specific user
 const getAllOrderFromAUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params
@@ -156,6 +167,8 @@ const getAllOrderFromAUser = async (req: Request, res: Response) => {
         });
     }
 }
+
+// Function for get total price from order data for a specific user
 const getTotalPriceFromOrder = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params

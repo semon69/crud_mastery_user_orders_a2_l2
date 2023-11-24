@@ -4,6 +4,7 @@ import { Users } from "../users.model"
 import { TOrder, TUsers } from "./users.interface"
 import bcrypt from "bcrypt"
 
+// Function for create user into db. Check user already exist or not
 const createUsersIntoDb = async (users: TUsers, userId: number) => {
     if (await Users.isUserExists(users.userId)) {
         throw new Error('User already exists')
@@ -19,6 +20,8 @@ const createUsersIntoDb = async (users: TUsers, userId: number) => {
     ])
     return result[0]
 }
+
+// Function for get all users from db
 const getAllUsersFromDb = async () => {
     const result = await Users.aggregate([
         {
@@ -28,6 +31,7 @@ const getAllUsersFromDb = async () => {
     return result
 }
 
+// Function for get a user from db. Check user exist or not
 const getSingleUserFromDb = async (userId: number) => {
     if (await Users.isUserExists(userId)) {
         const result = await Users.aggregate([
@@ -46,6 +50,7 @@ const getSingleUserFromDb = async (userId: number) => {
 
 }
 
+// Function for update a user from db. Check user exist or not
 const updateUsersDataFromDb = async (userId: number, user: TUsers) => {
     if (await Users.isUserExists(userId)) {
         user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt_rounds))
@@ -69,6 +74,7 @@ const updateUsersDataFromDb = async (userId: number, user: TUsers) => {
     }
 }
 
+// Function for delete a user from db. Check user exist or not
 const deleteSingleUserFromDb = async (userId: number) => {
     if (await Users.isUserExists(userId)) {
         const result = await Users.deleteOne({ userId: userId })
@@ -78,6 +84,7 @@ const deleteSingleUserFromDb = async (userId: number) => {
     }
 }
 
+// Function for update a user orders from db. Check user exist or not. If there  is orders previously then push new order else set new order
 const addOrderDataIntoDb = async (userId: number, order: TOrder) => {
     if (await Users.isUserExists(userId)) {
         const user = await Users.findOne({ userId: userId })
@@ -99,6 +106,7 @@ const addOrderDataIntoDb = async (userId: number, order: TOrder) => {
 
 }
 
+// Function for get a user orders data from db. Check user exist or not
 const getAllOrdersForSingleUserFromDb = async (userId: number) => {
     if (await Users.isUserExists(userId)) {
         const result = await Users.aggregate([
@@ -116,6 +124,7 @@ const getAllOrdersForSingleUserFromDb = async (userId: number) => {
 
 }
 
+// Function for get a user orders total price from db. Check user exist or not
 const getTotalPriceForAOrdersFromDb = async (userId: number) => {
     if (await Users.isUserExists(userId)) {
         const result = await Users.aggregate([
